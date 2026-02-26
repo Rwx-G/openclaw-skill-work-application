@@ -187,7 +187,7 @@ class JobScraper:
             if location == "Paris":
                 qp["lieux"] = "75"
             elif location == "IDF":
-                # Multiple lieux values — append manually after urlencode
+                # Multiple lieux values - append manually after urlencode
                 pass
             url = f"{base}?{urlencode(qp)}"
             if location == "IDF":

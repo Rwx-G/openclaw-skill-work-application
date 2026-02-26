@@ -97,7 +97,7 @@ All capabilities are disabled or restricted by default. The agent cannot perform
 | `allow_export` | `true` | Generate HTML/PDF output |
 | `allow_scrape` | `false` | Run Playwright browser, make network requests |
 | `allow_tracking` | `true` | Append to candidature log |
-| `readonly_mode` | `false` | Master kill-switch — blocks all writes |
+| `readonly_mode` | `false` | Master kill-switch - blocks all writes |
 
 ### Credential isolation
 
@@ -118,7 +118,7 @@ All profile fields are passed through `html.escape()` before HTML rendering. No 
 
 ### Network boundaries
 
-- **No network calls** by default — CV generation, analysis, tracking are fully offline
+- **No network calls** by default - CV generation, analysis, tracking are fully offline
 - Network calls only happen when `allow_scrape=true`, exclusively via Playwright (headless Chromium)
 - URLs built from user data (company names for review lookup) are properly URL-encoded
 - No background network activity, no telemetry, no phone-home

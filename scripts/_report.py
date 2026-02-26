@@ -369,7 +369,7 @@ async def _scrape_job_page(url: str) -> dict:
 async def _scrape_company_reviews(company_name: str) -> dict:
     """Scrape Glassdoor FR / Indeed FR for company reviews.
 
-    Fully graceful — never raises. Returns scraped data or empty defaults.
+    Fully graceful - never raises. Returns scraped data or empty defaults.
     Only called when allow_scrape=true.
     """
     result = {
@@ -1278,7 +1278,7 @@ def save_report(report: dict, markdown: str) -> dict:
     store = get_storage()
     store.ensure_dir()
 
-    # Build filename — strict sanitisation to prevent path traversal
+    # Build filename - strict sanitisation to prevent path traversal
     company = report.get("company_name", "unknown")
     # Only keep ASCII alphanumeric + hyphens
     company_slug = re.sub(r"[^a-zA-Z0-9]", "-", company).strip("-").lower()

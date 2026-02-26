@@ -162,7 +162,7 @@ def _read_linkedin_csv(zf: zipfile.ZipFile, filename: str) -> list[dict]:
     lines = text.splitlines()
     if len(lines) < 2:
         return []
-    # Skip the first line (LinkedIn note) — the real header is on line index 1
+    # Skip the first line (LinkedIn note) - the real header is on line index 1
     csv_text = "\n".join(lines[1:])
     reader = csv.DictReader(io.StringIO(csv_text))
     return list(reader)

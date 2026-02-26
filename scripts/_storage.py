@@ -58,7 +58,7 @@ def _validate_name(name: str) -> str:
 
     # Normalise (collapse redundant slashes, /./ etc.)
     clean = posixpath.normpath(name)
-    # normpath might produce ".." if input was crafted — double check
+    # normpath might produce ".." if input was crafted - double check
     if clean.startswith("..") or "/.." in clean:
         raise ValueError(f"Path traversal detected: {name!r}")
 

@@ -10,9 +10,9 @@
 
 Job search automation for OpenClaw agents. 4 HTML CV templates, scraping across 5 French job platforms, keyword-based scoring, deep analysis with page scraping, full multi-dimension report (skills/company/location/salary), and candidature tracking. Stdlib only (except optional Playwright for scraping and analysis). Supports local and Nextcloud storage. Includes interactive setup wizard, validation script, and a behavior restriction system via `config.json`.
 
-- All capabilities disabled or restricted by default — opt-in via `config.json`
+- All capabilities disabled or restricted by default - opt-in via `config.json`
 - `readonly_mode` blocks all writes regardless of individual permissions
-- No secrets stored in config — credentials are never required for core features
+- No secrets stored in config - credentials are never required for core features
 - No external HTTP calls unless `allow_scrape=true` (Playwright only, no background network)
 - Path traversal protection on all storage operations (local and Nextcloud)
 - HTML output escaped to prevent injection (`html.escape` on all profile fields)
@@ -100,23 +100,23 @@ A `config.example.json` with safe defaults and example scraper searches is inclu
 
 ## Security
 
-- **Stdlib for core features** — CV generation, ranking, and tracking require no pip install; Playwright is optional (scraping, deep analysis, reports)
-- **All capabilities disabled by default** — `allow_scrape` and `allow_write` are `false` out of the box
-- **No credentials required** — this skill stores no secrets; config contains only behavioral flags
-- **No external HTTP calls** unless `allow_scrape=true` — scraping uses Playwright only, no background network activity
-- **Path traversal protection** — all storage operations validate filenames against `../`, absolute paths, and null bytes; resolved paths are checked against the storage root
-- **HTML injection prevention** — all profile fields passed through `html.escape()` before rendering
-- **URL encoding** — external URLs built from user data (company names) are properly encoded
-- **JSON deserialization validation** — `read_json()` validates the returned type before use
-- **readonly_mode** — master kill-switch that blocks all write operations regardless of individual permissions
-- **No eval / no shell execution** — no user-controlled strings are passed to `eval()`, `exec()`, or shell commands
+- **Stdlib for core features** - CV generation, ranking, and tracking require no pip install; Playwright is optional (scraping, deep analysis, reports)
+- **All capabilities disabled by default** - `allow_scrape` and `allow_write` are `false` out of the box
+- **No credentials required** - this skill stores no secrets; config contains only behavioral flags
+- **No external HTTP calls** unless `allow_scrape=true` - scraping uses Playwright only, no background network activity
+- **Path traversal protection** - all storage operations validate filenames against `../`, absolute paths, and null bytes; resolved paths are checked against the storage root
+- **HTML injection prevention** - all profile fields passed through `html.escape()` before rendering
+- **URL encoding** - external URLs built from user data (company names) are properly encoded
+- **JSON deserialization validation** - `read_json()` validates the returned type before use
+- **readonly_mode** - master kill-switch that blocks all write operations regardless of individual permissions
+- **No eval / no shell execution** - no user-controlled strings are passed to `eval()`, `exec()`, or shell commands
 
 ## Requirements
 
 - Python 3.9+
-- No pip install needed for core features (CV generation, ranking, tracking — stdlib only)
+- No pip install needed for core features (CV generation, ranking, tracking - stdlib only)
 - Optional: `pip install playwright playwright-stealth && playwright install chromium` (for job scraping, deep analysis, and reports)
-- Optional: `playwright-stealth` — stealth plugin for anti-bot bypass (gracefully ignored if absent)
+- Optional: `playwright-stealth` - stealth plugin for anti-bot bypass (gracefully ignored if absent)
 
 ## Documentation
 

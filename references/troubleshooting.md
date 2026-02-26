@@ -91,7 +91,7 @@ playwright install chromium
 **Fix**:
 - Check the URL is valid and accessible in a browser
 - Some pages require authentication or have anti-bot protections
-- Try again — transient network issues are common
+- Try again - transient network issues are common
 
 ### Report shows "non communique" for salary
 **Cause**: No salary or TJM was detected in the job page text.
