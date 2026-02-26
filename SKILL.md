@@ -83,7 +83,7 @@ python3 scripts/init.py        # validate configuration
 | `~/.openclaw/data/work-application/reports/report-*.md` | Report | Full analysis reports (markdown) |
 | `~/.openclaw/data/work-application/reports/report-*.json` | Report | Full analysis reports (JSON) |
 
-**Nextcloud storage** (optional): when `storage.backend = "nextcloud"` is set in config, files are stored on the user's Nextcloud instance instead of locally. Authentication is delegated entirely to the [`openclaw-skill-nextcloud`](https://clawhub.ai/Romain-Grosos/nextcloud-files) skill — this skill never handles Nextcloud credentials. The nextcloud skill must be installed separately.
+**Nextcloud storage** (optional): when `storage.backend = "nextcloud"` is set in config, files are stored on the user's Nextcloud instance instead of locally. Authentication is delegated entirely to the [`openclaw-skill-nextcloud`](https://clawhub.ai/Romain-Grosos/nextcloud-files) skill - this skill never handles Nextcloud credentials. The nextcloud skill must be installed separately.
 
 **Cleanup:** `python3 scripts/setup.py --cleanup`
 
@@ -105,11 +105,11 @@ All capabilities are disabled or restricted by default. The agent cannot perform
 
 ### Credential isolation
 
-This skill stores **no secrets** and requires **no environment variables**. `config.json` contains only behavioral flags and defaults — never credentials.
+This skill stores **no secrets** and requires **no environment variables**. `config.json` contains only behavioral flags and defaults - never credentials.
 
 - **Local storage** (default): reads/writes files under `~/.openclaw/data/work-application/`. No authentication needed.
-- **Nextcloud storage** (optional): delegates all authentication to the **[`openclaw-skill-nextcloud`](https://clawhub.ai/Romain-Grosos/nextcloud-files)** skill, which manages its own credentials (`NC_URL`, `NC_USER`, `NC_APP_KEY` in `~/.openclaw/secrets/nc_creds`). This skill never reads, stores, or handles Nextcloud credentials directly — it imports `NextcloudClient` from the nextcloud skill at runtime. The nextcloud skill must be installed and configured separately (`clawhub install nextcloud-files`).
-- **Scraping** (optional, `allow_scrape=true`): Playwright runs without authentication. Job pages are fetched as anonymous HTTP requests. Company review scraping (Glassdoor/Indeed) also runs unauthenticated — no login or API key is used.
+- **Nextcloud storage** (optional): delegates all authentication to the **[`openclaw-skill-nextcloud`](https://clawhub.ai/Romain-Grosos/nextcloud-files)** skill, which manages its own credentials (`NC_URL`, `NC_USER`, `NC_APP_KEY` in `~/.openclaw/secrets/nc_creds`). This skill never reads, stores, or handles Nextcloud credentials directly - it imports `NextcloudClient` from the nextcloud skill at runtime. The nextcloud skill must be installed and configured separately (`clawhub install nextcloud-files`).
+- **Scraping** (optional, `allow_scrape=true`): Playwright runs without authentication. Job pages are fetched as anonymous HTTP requests. Company review scraping (Glassdoor/Indeed) also runs unauthenticated - no login or API key is used.
 
 ### Path traversal protection
 
@@ -126,11 +126,11 @@ All profile fields are passed through `html.escape()` before HTML rendering. No 
 
 ### Network boundaries
 
-- **No network calls** by default — CV generation, analysis, tracking are fully offline
+- **No network calls** by default - CV generation, analysis, tracking are fully offline
 - Network calls only happen when `allow_scrape=true`, exclusively via Playwright (headless Chromium)
 - **Domains contacted when scraping**: `free-work.com`, `welcometothejungle.com`, `apec.fr`, `hellowork.com`, `lehibou.com` (job platforms), plus the specific job offer URL provided by the user
-- **Domains contacted by report** (optional, `allow_scrape=true`): `glassdoor.fr`, `fr.indeed.com` (company reviews — unauthenticated, anonymous)
-- **Nextcloud storage** (optional): contacts the user's own Nextcloud instance via the nextcloud skill — no third-party server
+- **Domains contacted by report** (optional, `allow_scrape=true`): `glassdoor.fr`, `fr.indeed.com` (company reviews - unauthenticated, anonymous)
+- **Nextcloud storage** (optional): contacts the user's own Nextcloud instance via the nextcloud skill - no third-party server
 - URLs built from user data (company names for review lookup) are properly URL-encoded
 - No background network activity, no telemetry, no phone-home
 

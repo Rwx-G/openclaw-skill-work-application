@@ -10,10 +10,10 @@
 
 Job search automation for OpenClaw agents. 4 HTML CV templates, scraping across 5 French job platforms, keyword-based scoring, deep analysis with page scraping, full multi-dimension report (skills/company/location/salary), and candidature tracking. Stdlib only (except optional Playwright for scraping and analysis). Supports local and Nextcloud storage. Includes interactive setup wizard, validation script, and a behavior restriction system via `config.json`.
 
-- All capabilities disabled or restricted by default — opt-in via `config.json`
+- All capabilities disabled or restricted by default - opt-in via `config.json`
 - `readonly_mode` blocks all writes regardless of individual permissions
-- No secrets stored — this skill requires no credentials, no API keys, no environment variables
-- Nextcloud storage (optional) delegates authentication to the [`nextcloud-files`](https://clawhub.ai/Romain-Grosos/nextcloud-files) skill — credentials are never handled here
+- No secrets stored - this skill requires no credentials, no API keys, no environment variables
+- Nextcloud storage (optional) delegates authentication to the [`nextcloud-files`](https://clawhub.ai/Romain-Grosos/nextcloud-files) skill - credentials are never handled here
 - No external HTTP calls unless `allow_scrape=true` (Playwright only, no background network)
 - Path traversal protection on all storage operations (local and Nextcloud)
 - HTML output escaped to prevent injection (`html.escape` on all profile fields)
@@ -101,17 +101,17 @@ A `config.example.json` with safe defaults and example scraper searches is inclu
 
 ## Security
 
-- **Stdlib for core features** — CV generation, ranking, and tracking require no pip install; Playwright is optional (scraping, deep analysis, reports)
-- **All capabilities disabled by default** — `allow_scrape` and `allow_write` are `false` out of the box
-- **No credentials, no secrets, no env vars** — `config.json` contains only behavioral flags and defaults. This skill never stores or handles passwords, tokens, or API keys
-- **Nextcloud credential delegation** — optional Nextcloud storage delegates all authentication to the separate [`nextcloud-files`](https://clawhub.ai/Romain-Grosos/nextcloud-files) skill, which manages its own credentials (`~/.openclaw/secrets/nc_creds`). This skill only imports `NextcloudClient` at runtime
-- **No external HTTP calls** unless `allow_scrape=true` — scraping uses Playwright only (headless Chromium), contacting job platforms and optionally `glassdoor.fr`/`fr.indeed.com` for company reviews. No background network activity, no telemetry
-- **Path traversal protection** — all storage operations validate filenames against `../`, absolute paths, and null bytes; resolved paths are checked against the storage root
-- **HTML injection prevention** — all profile fields passed through `html.escape()` before rendering
-- **URL encoding** — external URLs built from user data (company names) are properly encoded
-- **JSON deserialization validation** — `read_json()` validates the returned type before use
-- **readonly_mode** — master kill-switch that blocks all write operations regardless of individual permissions
-- **No eval / no shell execution** — no user-controlled strings are passed to `eval()`, `exec()`, or shell commands
+- **Stdlib for core features** - CV generation, ranking, and tracking require no pip install; Playwright is optional (scraping, deep analysis, reports)
+- **All capabilities disabled by default** - `allow_scrape` and `allow_write` are `false` out of the box
+- **No credentials, no secrets, no env vars** - `config.json` contains only behavioral flags and defaults. This skill never stores or handles passwords, tokens, or API keys
+- **Nextcloud credential delegation** - optional Nextcloud storage delegates all authentication to the separate [`nextcloud-files`](https://clawhub.ai/Romain-Grosos/nextcloud-files) skill, which manages its own credentials (`~/.openclaw/secrets/nc_creds`). This skill only imports `NextcloudClient` at runtime
+- **No external HTTP calls** unless `allow_scrape=true` - scraping uses Playwright only (headless Chromium), contacting job platforms and optionally `glassdoor.fr`/`fr.indeed.com` for company reviews. No background network activity, no telemetry
+- **Path traversal protection** - all storage operations validate filenames against `../`, absolute paths, and null bytes; resolved paths are checked against the storage root
+- **HTML injection prevention** - all profile fields passed through `html.escape()` before rendering
+- **URL encoding** - external URLs built from user data (company names) are properly encoded
+- **JSON deserialization validation** - `read_json()` validates the returned type before use
+- **readonly_mode** - master kill-switch that blocks all write operations regardless of individual permissions
+- **No eval / no shell execution** - no user-controlled strings are passed to `eval()`, `exec()`, or shell commands
 
 ## Requirements
 
