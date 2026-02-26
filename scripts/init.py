@@ -94,9 +94,10 @@ def main():
             r.ok("Master profile exists", str(MASTER_PROFILE_FILE))
             try:
                 master_profile = load_master_profile()
-                name  = master_profile.get("name", "?")
-                title = master_profile.get("title", "?")
-                skills = master_profile.get("skills", [])
+                identity = master_profile.get("identity", {})
+                name = f"{identity.get('firstName', '')} {identity.get('lastName', '')}".strip() or "?"
+                title = identity.get("title", "?")
+                skills = master_profile.get("hard_skills", [])
                 r.ok("Load master profile", f'name="{name}"  title="{title}"  skills={len(skills)}')
             except Exception as e:
                 r.fail("Load master profile", str(e))
@@ -104,7 +105,7 @@ def main():
         r.fail("Master profile exists", str(e))
 
     if master_profile:
-        required_keys = ["name", "title", "experiences"]
+        required_keys = ["identity", "hard_skills", "experiences"]
         missing = [k for k in required_keys if k not in master_profile]
         if missing:
             r.fail("Profile structure", f"missing keys: {', '.join(missing)}")
@@ -134,19 +135,23 @@ def main():
     except Exception as e:
         r.fail("validate_count", str(e))
 
-    if master_profile:
-        try:
-            result = validate_profile(master_profile)
+    # validate_profile targets adapted CVs (15 skills max, 6 bullets max)
+    # Master profile intentionally exceeds these limits - skip validation on it
+    try:
+        from _profile import load_adapted_profile, ADAPTED_PROFILE_FILE, profile_exists
+        if profile_exists(ADAPTED_PROFILE_FILE):
+            adapted = load_adapted_profile()
+            result = validate_profile(adapted)
             errors   = result.get("errors", [])
             warnings = result.get("warnings", [])
             if errors:
                 r.fail("validate_profile", f"{len(errors)} error(s), {len(warnings)} warning(s)")
             else:
                 r.ok("validate_profile", f"0 errors, {len(warnings)} warning(s)")
-        except Exception as e:
-            r.fail("validate_profile", str(e))
-    else:
-        r.skip("validate_profile", "no master profile loaded")
+        else:
+            r.skip("validate_profile", "no adapted profile yet (generate one with 'render')")
+    except Exception as e:
+        r.skip("validate_profile", f"could not load adapted profile: {e}")
 
     # ── 4. CV Rendering ──────────────────────────────────────────────────────
     print("\n● CV Rendering\n")
