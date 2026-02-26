@@ -138,7 +138,7 @@ def main():
     # validate_profile targets adapted CVs (15 skills max, 6 bullets max)
     # Master profile intentionally exceeds these limits - skip validation on it
     try:
-        from _profile import load_adapted_profile, ADAPTED_PROFILE_FILE, profile_exists
+        from _profile import load_adapted_profile
         if profile_exists(ADAPTED_PROFILE_FILE):
             adapted = load_adapted_profile()
             result = validate_profile(adapted)
