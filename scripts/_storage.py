@@ -144,12 +144,12 @@ class NextcloudStorage(StorageBackend):
             # Find the nextcloud skill's client
             nc_script = (
                 Path(__file__).resolve().parent.parent.parent
-                / "openclaw-skill-nextcloud" / "scripts" / "nextcloud.py"
+                / "nextcloud-files" / "scripts" / "nextcloud.py"
             )
             if not nc_script.exists():
                 raise RuntimeError(
                     f"Nextcloud skill not found at {nc_script}\n"
-                    "  Install it first: clawhub install nextcloud"
+                    "  Install it first: clawhub install nextcloud-files"
                 )
             spec = importlib.util.spec_from_file_location("nextcloud", str(nc_script))
             mod = importlib.util.module_from_spec(spec)

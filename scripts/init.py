@@ -123,13 +123,13 @@ def main():
     print("\n● Validators\n")
 
     try:
-        validate_length("This is a sample string for validation testing.", max_length=200)
+        validate_length("Ingénieur Systèmes avec 12 ans d'expérience en environnements critiques.", "summary")
         r.ok("validate_length", "sample string within bounds")
     except Exception as e:
         r.fail("validate_length", str(e))
 
     try:
-        validate_count(5, max_count=10)
+        validate_count(5, "experiences")
         r.ok("validate_count", "sample count within bounds")
     except Exception as e:
         r.fail("validate_count", str(e))
