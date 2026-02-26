@@ -209,29 +209,30 @@ def _extract_company_and_title(text: str, url: str) -> dict:
             title = line
             break
 
-    # Try common patterns for company
+    # Try common patterns for company — use \b around "at" to avoid substring matches
     for line in lines[:30]:
         m = re.search(
-            r"(?:chez|at|@|entreprise|company|societe|société)\s*[:\-]?\s*(.+)",
+            r"(?:chez|\bat\b|@|entreprise|company|companies|societe|société)\s*[:\-]?\s*(.+)",
             line, re.IGNORECASE,
         )
         if m:
             company = m.group(1).strip()[:60]
             break
 
-    # Fallback: extract from URL domain
+    # Fallback: extract from URL path (handles /company/ and /companies/ — e.g. WTTJ)
     if not company:
-        domain_match = re.search(r"https?://(?:www\.)?([^/]+)", url)
-        if domain_match:
-            domain = domain_match.group(1)
-            # For job boards, company might be in URL path
-            path_match = re.search(
-                r"(?:company|entreprise|societe)/([^/]+)", url, re.IGNORECASE
-            )
-            if path_match:
-                company = path_match.group(1).replace("-", " ").title()
-            else:
-                company = domain
+        path_match = re.search(
+            r"(?:compan(?:y|ies)|entreprise|societe)/([^/?#]+)", url, re.IGNORECASE
+        )
+        if path_match:
+            slug = path_match.group(1)
+            # Strip common locale suffixes (-fr, -france, -be, etc.)
+            slug = re.sub(r"-(?:fr|be|ch|de|uk|es|it|france|belgium)$", "", slug, flags=re.IGNORECASE)
+            company = slug.replace("-", " ").title()
+        else:
+            domain_match = re.search(r"https?://(?:www\.)?([^/]+)", url)
+            if domain_match:
+                company = domain_match.group(1)
 
     return {"title": title, "company": company}
 
@@ -840,7 +841,7 @@ def analyze_salary(
             salary_parsed = {"value": val, "display": f"{val} EUR/j", "type": "tjm"}
         else:
             sal_match = re.search(
-                r"(\d{2,3})\s*k?\s*[-–a]\s*(\d{2,3})\s*k?\s*[€e]?",
+                r"(\d{2,3})\s*k?\s*[-–à]\s*(\d{2,3})\s*k?\s*[€e]?",
                 job_text, re.IGNORECASE,
             )
             if sal_match:
@@ -1247,7 +1248,10 @@ def format_report_markdown(report: dict) -> str:
     lines.append("")
 
     sp = salary["salary_parsed"]
-    lines.append(f"- **Salaire detecte** : {sp.get('display', '-')}")
+    salary_display = sp.get('display', '-') or '-'
+    if len(salary_display) > 80:
+        salary_display = "Non specifie"
+    lines.append(f"- **Salaire detecte** : {salary_display}")
     lines.append(f"- **Type** : {sp.get('type', 'inconnu')}")
 
     if salary["market_position"]:

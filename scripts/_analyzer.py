@@ -365,7 +365,7 @@ def parse_salary(salary: str) -> dict:
             value_k = value // 1000
             return {"value": value_k, "display": f"{value_k}k EUR", "type": "salary"}
 
-    return {"value": 0, "display": salary.strip() or "-", "type": "unknown"}
+    return {"value": 0, "display": "-", "type": "unknown"}
 
 
 def detect_remote(title: str, location: str, salary: str = "") -> dict:
