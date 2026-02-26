@@ -6,7 +6,7 @@
 [![OpenClaw](https://img.shields.io/badge/OpenClaw-skill-blue)](https://openclaw.ai)
 [![ClawHub](https://img.shields.io/badge/ClawHub-work--application-green)](https://clawhub.ai/Romain-Grosos/work-application)
 [![Python](https://img.shields.io/badge/Python-3.9+-brightgreen)](https://python.org)
-[![Stdlib](https://img.shields.io/badge/deps-stdlib%20only-success)](.)
+[![Playwright](https://img.shields.io/badge/deps-Playwright%20(optional)-informational)](https://playwright.dev/python/)
 
 Job search automation for OpenClaw agents. 4 HTML CV templates, scraping across 5 French job platforms, keyword-based scoring, deep analysis with page scraping, full multi-dimension report (skills/company/location/salary), and candidature tracking. Stdlib only (except optional Playwright for scraping and analysis). Supports local and Nextcloud storage. Includes interactive setup wizard, validation script, and a behavior restriction system via `config.json`.
 
@@ -100,7 +100,7 @@ A `config.example.json` with safe defaults and example scraper searches is inclu
 
 ## Security
 
-- **Stdlib only** — no pip install required for core features (CV generation, analysis, tracking)
+- **Stdlib for core features** — CV generation, ranking, and tracking require no pip install; Playwright is optional (scraping, deep analysis, reports)
 - **All capabilities disabled by default** — `allow_scrape` and `allow_write` are `false` out of the box
 - **No credentials required** — this skill stores no secrets; config contains only behavioral flags
 - **No external HTTP calls** unless `allow_scrape=true` — scraping uses Playwright only, no background network activity
@@ -114,8 +114,9 @@ A `config.example.json` with safe defaults and example scraper searches is inclu
 ## Requirements
 
 - Python 3.9+
-- No pip installs needed for CV generation (stdlib only)
+- No pip install needed for core features (CV generation, ranking, tracking — stdlib only)
 - Optional: `pip install playwright playwright-stealth && playwright install chromium` (for job scraping, deep analysis, and reports)
+- Optional: `playwright-stealth` — stealth plugin for anti-bot bypass (gracefully ignored if absent)
 
 ## Documentation
 
