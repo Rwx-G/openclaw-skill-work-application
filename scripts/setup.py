@@ -539,6 +539,129 @@ def _configure_scraper_platforms(cfg: dict) -> None:
         print("\n  ✗ Aucune plateforme activee.")
 
 
+def _configure_searches(cfg: dict) -> None:
+    """Add/remove searches interactively."""
+    scraper = cfg.setdefault("scraper", {})
+    searches = scraper.setdefault("searches", [])
+
+    # Show existing searches
+    if searches:
+        print(f"\n  Recherches actuelles ({len(searches)}) :\n")
+        for i, s in enumerate(searches, 1):
+            params = s.get("params", {})
+            query = params.get("query", "?")
+            loc = params.get("location", params.get("radius", ""))
+            loc_str = f" | {loc}" if loc else ""
+            print(f"    {i}. [{s.get('platform','?')}] {s.get('name', query)} - {query}{loc_str}")
+    else:
+        print("\n  Aucune recherche configuree.")
+
+    # Remove searches
+    if searches and _ask_bool("\n  Supprimer des recherches ?", default=False):
+        indices = _ask("  Numeros a supprimer (virgule, ex: 1,3)").strip()
+        to_remove = set()
+        for part in indices.split(","):
+            part = part.strip()
+            if part.isdigit():
+                idx = int(part) - 1
+                if 0 <= idx < len(searches):
+                    to_remove.add(idx)
+        searches[:] = [s for i, s in enumerate(searches) if i not in to_remove]
+        print(f"  ✓ {len(to_remove)} recherche(s) supprimee(s). Total : {len(searches)}")
+
+    # Add new searches
+    print()
+    while _ask_bool("  Ajouter une recherche ?", default=len(searches) == 0):
+        print()
+        # Platform selection
+        print("  Plateformes disponibles :")
+        for i, p in enumerate(_PLATFORMS, 1):
+            print(f"    {i}. {p}")
+        choice = _ask("  Plateforme (num ou nom)", default="3")
+        if choice.isdigit() and 1 <= int(choice) <= len(_PLATFORMS):
+            platform = _PLATFORMS[int(choice) - 1]
+        elif choice in _PLATFORMS:
+            platform = choice
+        else:
+            print("  Plateforme invalide, skip.")
+            continue
+
+        query = _ask("  Requete (ex: devops, ingenieur systemes)")
+        if not query:
+            print("  Requete vide, skip.")
+            continue
+
+        name = _ask("  Nom de la recherche", default=f"{query.title()} {platform.title()}")
+
+        params: dict = {"query": query}
+
+        if platform in ("wttj", "apec", "hellowork", "lehibou"):
+            location = _ask("  Localisation (ex: Paris, France / IDF)", default="Paris, France")
+            if location:
+                params["location"] = location
+
+        if platform in ("wttj", "lehibou"):
+            radius = _ask("  Rayon (km)", default="30")
+            if radius.isdigit():
+                params["radius"] = int(radius) if platform == "wttj" else radius
+
+        if platform == "free-work":
+            contracts = _ask(
+                "  Type de contrat (contractor/cdi/all)", default="contractor"
+            ).lower()
+            if contracts in ("contractor", "cdi", "all"):
+                params["contracts"] = contracts
+
+        searches.append({"name": name, "platform": platform, "params": params})
+        print(f"  ✓ Recherche ajoutee : [{platform}] {name}")
+        print()
+
+    scraper["searches"] = searches
+    print(f"\n  ✓ {len(searches)} recherche(s) configuree(s).")
+
+
+def _configure_filters(cfg: dict) -> None:
+    """Configure scraper filters interactively."""
+    scraper = cfg.setdefault("scraper", {})
+    filters = scraper.setdefault("filters", {})
+
+    print("\n  Filtres de recherche :\n")
+
+    # Salary / TJM thresholds
+    min_tjm = _ask("  TJM minimum (EUR/j, 0 = pas de filtre)", default=str(filters.get("minTJM", 0)))
+    filters["minTJM"] = int(min_tjm) if min_tjm.isdigit() else 0
+
+    min_sal = _ask("  Salaire CDI minimum (EUR/an, 0 = pas de filtre)", default=str(filters.get("minSalary", 0)))
+    filters["minSalary"] = int(min_sal) if min_sal.isdigit() else 0
+
+    max_age = _ask("  Age max des offres (jours)", default=str(filters.get("maxAge", 7)))
+    filters["maxAge"] = int(max_age) if max_age.isdigit() else 7
+
+    # Location allowlist
+    current_locs = filters.get("locations", [])
+    print(f"\n  Zones autorisees (liste blanche, vide = toutes) : {', '.join(current_locs) or 'aucune (toutes)'}")
+    if _ask_bool("  Modifier la liste blanche ?", default=False):
+        raw = _ask("  Zones autorisees (virgule, ex: Paris,91,Essonne,Massy)", default=", ".join(current_locs))
+        filters["locations"] = [z.strip() for z in raw.split(",") if z.strip()]
+
+    # Location blocklist
+    current_excl = filters.get("excludeLocations", [])
+    print(f"\n  Zones exclues : {', '.join(current_excl) or 'aucune'}")
+    if _ask_bool("  Modifier la liste d'exclusion ?", default=False):
+        raw = _ask("  Zones exclues (virgule)", default=", ".join(current_excl))
+        filters["excludeLocations"] = [z.strip() for z in raw.split(",") if z.strip()]
+
+    # Company blocklist
+    current_comp = filters.get("excludeCompanies", [])
+    print(f"\n  Entreprises exclues : {', '.join(current_comp) or 'aucune'}")
+    if _ask_bool("  Modifier les entreprises exclues ?", default=False):
+        raw = _ask("  Entreprises exclues (virgule)", default=", ".join(current_comp))
+        filters["excludeCompanies"] = [c.strip() for c in raw.split(",") if c.strip()]
+
+    scraper["filters"] = filters
+    print("\n  ✓ Filtres mis a jour.")
+
+
 # ── Main setup flow ──────────────────────────────────────────────────────────
 
 def main():
@@ -625,7 +748,7 @@ def main():
     current_backend = storage_cfg.get("backend", "local")
 
     # Check if nextcloud skill is available
-    nc_skill_path = SKILL_DIR.parent / "openclaw-skill-nextcloud" / "scripts" / "nextcloud.py"
+    nc_skill_path = SKILL_DIR.parent / "nextcloud-files" / "scripts" / "nextcloud.py"
     nc_available = nc_skill_path.exists()
 
     if nc_available:
@@ -660,7 +783,16 @@ def main():
             print("    pip install playwright playwright-stealth && playwright install chromium")
             print()
 
+        # Configure searches
+        print("\n  ── Requetes de recherche ──\n")
+        _configure_searches(cfg)
+
+        # Configure filters
+        print("\n  ── Filtres ──")
+        _configure_filters(cfg)
+
         # Configure platforms
+        print("\n  ── Plateformes ──")
         _configure_scraper_platforms(cfg)
     else:
         print("\n  (Scraper step skipped - allow_scrape is false)")

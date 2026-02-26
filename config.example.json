@@ -7,30 +7,20 @@
   "default_color": "#2563eb",
   "default_lang": "fr",
   "readonly_mode": false,
+  "report_mode": "analysis",
+  "storage": {
+    "backend": "local",
+    "path": "/OpenClaw/work-application"
+  },
   "scraper": {
     "searches": [
       {
-        "name": "Ingénieur Systèmes LeHibou",
-        "platform": "lehibou",
-        "params": {
-          "query": "ingénieur systèmes",
-          "radius": "30"
-        }
-      },
-      {
-        "name": "DevOps LeHibou",
-        "platform": "lehibou",
+        "name": "DevOps CDI WTTJ",
+        "platform": "wttj",
         "params": {
           "query": "devops",
-          "radius": "30"
-        }
-      },
-      {
-        "name": "Ingénieur Systèmes Freelance",
-        "platform": "free-work",
-        "params": {
-          "query": "ingénieur système",
-          "contracts": "contractor"
+          "location": "Paris, France",
+          "radius": 30
         }
       },
       {
@@ -40,40 +30,15 @@
           "query": "devops",
           "contracts": "contractor"
         }
-      },
-      {
-        "name": "DevOps CDI WTTJ",
-        "platform": "wttj",
-        "params": {
-          "query": "devops",
-          "location": "Paris, France",
-          "radius": 50
-        }
-      },
-      {
-        "name": "DevOps CDI Apec",
-        "platform": "apec",
-        "params": {
-          "query": "devops",
-          "location": "IDF"
-        }
-      },
-      {
-        "name": "DevOps CDI HelloWork",
-        "platform": "hellowork",
-        "params": {
-          "query": "devops",
-          "location": "Paris"
-        }
       }
     ],
     "filters": {
       "excludeCompanies": [],
-      "minTJM": 500,
-      "minSalary": 60000,
-      "maxAge": 4,
-      "locations": ["Paris", "Essonne", "91", "Massy", "Évry", "Palaiseau", "Orsay", "Saclay", "Arpajon", "Brétigny", "Versailles", "Rambouillet", "Vélizy", "Chartres", "78", "28"],
-      "excludeLocations": ["Montreuil", "Saint-Denis", "La Défense", "Levallois", "Courbevoie", "Boulogne", "Issy", "Puteaux", "Neuilly", "93", "Roubaix", "Lyon", "Marseille", "Toulouse", "Bordeaux", "Nantes", "Nice", "Monaco"]
+      "minTJM": 400,
+      "minSalary": 45000,
+      "maxAge": 7,
+      "locations": [],
+      "excludeLocations": []
     },
     "rate_limit_ms": 2000,
     "scroll_timeout_ms": 5000
