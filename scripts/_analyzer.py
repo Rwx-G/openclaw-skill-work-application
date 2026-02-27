@@ -930,14 +930,13 @@ def format_markdown(
     lines.append(f"*Genere le {now} - {len(jobs)} offres analysees*")
     lines.append("")
 
-    # Top 30 table
-    top30 = jobs[:30]
-    lines.append("## Top 30")
+    # Full results table
+    lines.append(f"## Offres ({len(jobs)})")
     lines.append("")
     lines.append("| # | Match | Salaire | Distance | Titre | Entreprise | Lien |")
     lines.append("|---|-------|---------|----------|-------|------------|------|")
 
-    for i, job in enumerate(top30, 1):
+    for i, job in enumerate(jobs, 1):
         match_pct = job.get("match", {}).get("percentage", 0)
         salary_disp = job.get("salary_parsed", {}).get("display", "-")
         dist = job.get("distance", {})
