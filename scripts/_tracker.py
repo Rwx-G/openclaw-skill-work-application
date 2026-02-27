@@ -17,6 +17,13 @@ _CANDIDATURES_NAME = "candidatures.md"
 from pathlib import Path
 CANDIDATURES_FILE = Path.home() / ".openclaw" / "data" / "work-application" / _CANDIDATURES_NAME
 
+_LEGEND = """\
+
+---
+
+**Legende statuts :** ⏳ en attente | 📞 entretien / call | 🤝 negociation | ✅ offre recue | ❌ refus | 🚫 desistement / cloture
+"""
+
 _HEADER = """\
 # Suivi des candidatures
 
@@ -100,22 +107,28 @@ def _parse_rows() -> list[dict]:
 
 def _row_to_line(row: dict) -> str:
     """Format a row dict as a Markdown table line."""
+    def _v(key, required=False):
+        val = row.get(key, "")
+        if not val or val.strip() == "-":
+            return "" if required else "\\-"
+        return val
+
     cols = [
-        row.get("date", ""),
-        row.get("company", ""),
-        row.get("position", ""),
-        row.get("location", ""),
-        row.get("type", ""),
-        row.get("salary", ""),
-        row.get("source", ""),
-        row.get("contact", ""),
-        row.get("email", ""),
-        row.get("phone", ""),
-        row.get("status", ""),
-        row.get("action", ""),
-        row.get("planned", ""),
-        row.get("offer_url", ""),
-        row.get("notes", ""),
+        _v("date", required=True),
+        _v("company", required=True),
+        _v("position", required=True),
+        _v("location"),
+        _v("type"),
+        _v("salary"),
+        _v("source"),
+        _v("contact"),
+        _v("email"),
+        _v("phone"),
+        row.get("status", "⏳"),
+        _v("action"),
+        _v("planned"),
+        _v("offer_url"),
+        _v("notes"),
     ]
     return "| " + " | ".join(cols) + " |"
 
